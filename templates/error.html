@@ -1,0 +1,9 @@
+{{define "title"}}Error — FolioCV{{end}}
+{{define "content"}}
+<div class="max-w-md mx-auto text-center py-12 animate-fade-up">
+    <div class="w-14 h-14 rounded-2xl bg-danger/10 border border-danger/30 flex items-center justify-center mx-auto mb-5 text-2xl">!</div>
+    <h1 class="font-display text-2xl font-bold mb-3">Something went wrong</h1>
+    <p class="text-gray-400 mb-8">{{if .Message}}{{.Message}}{{else}}An unexpected error occurred.{{end}}</p>
+    <a href="/" class="btn-primary rounded-xl px-6 py-3 inline-block">Go home</a>
+</div>
+{{end}}
