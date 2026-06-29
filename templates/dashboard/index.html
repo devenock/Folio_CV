@@ -32,6 +32,14 @@
                         {{if .Portfolio.IsPublic}}Public{{else}}Private{{end}}
                     </button>
                 </div>
+                <button id="builder-mode-toggle" hx-post="/dashboard/builder-mode/toggle" hx-target="this" hx-swap="outerHTML"
+                        class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-300"
+                        title="{{if eq .Portfolio.BuilderMode "canvas"}}Switch to classic editor{{else}}Switch to canvas builder{{end}}">
+                    {{if eq .Portfolio.BuilderMode "canvas"}}Canvas builder (preview){{else}}Classic editor{{end}}
+                </button>
+                {{if eq .Portfolio.BuilderMode "canvas"}}
+                <a href="/dashboard/canvas" class="text-xs text-brand2 hover:underline">Open canvas builder →</a>
+                {{end}}
                 <a href="/upload" class="text-xs text-gray-500 hover:text-gray-300 transition">Re-upload CV</a>
             </div>
         </div>

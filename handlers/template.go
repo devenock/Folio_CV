@@ -15,6 +15,7 @@ var templateFuncMap = template.FuncMap{
 	},
 	"isNil": func(s *string) bool { return s == nil },
 	"mul":   func(a, b int) int { return a * b },
+	"add":   func(a, b int) int { return a + b },
 }
 
 func parseTemplates(files ...string) (*template.Template, error) {

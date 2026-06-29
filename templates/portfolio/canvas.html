@@ -1,0 +1,118 @@
+{{define "portfolio_page"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Portfolio.FullName}} — {{deref .Portfolio.Headline}}</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        editor: { bg: '#070710', card: '#13131f', border: '#23232f' },
+                        brand:  '#7c5cff',
+                        brand2: '#22d3ee',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 768px) {
+            .canvas-grid { grid-template-columns: 1fr; }
+            .canvas-grid > div { grid-column: auto !important; grid-row: auto !important; }
+        }
+    </style>
+</head>
+<body class="bg-editor-bg text-gray-100 min-h-screen font-sans antialiased">
+    <div class="mesh-bg"></div>
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="canvas-grid animate-fade-up">
+            {{range .Blocks}}
+            <div style="grid-column: {{add .GridX 1}} / span {{.GridW}}; grid-row: {{add .GridY 1}} / span {{.GridH}}; z-index: {{.ZIndex}};">
+                {{template "canvas_block" .}}
+            </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>
+{{end}}
+
+{{define "canvas_block"}}
+<div class="h-full w-full rounded-2xl {{if not (eq .Type "divider")}}glass{{end}} p-6 overflow-auto">
+    {{if eq .Type "hero"}}
+        <h1 class="font-display text-4xl md:text-5xl font-bold tracking-tight">{{.Text}}</h1>
+        {{if .Headline}}<p class="text-gray-400 mt-3 text-lg">{{.Headline}}</p>{{end}}
+    {{else if eq .Type "heading"}}
+        <h2 class="font-display text-2xl md:text-3xl font-bold">{{.Text}}</h2>
+    {{else if eq .Type "text"}}
+        <p class="text-gray-300 leading-relaxed whitespace-pre-wrap">{{.Text}}</p>
+    {{else if eq .Type "button"}}
+        <div class="h-full flex items-center justify-center">
+            <a href="{{.URL}}" class="btn-primary rounded-xl px-6 py-3 inline-block">{{if .Label}}{{.Label}}{{else}}Learn more{{end}}</a>
+        </div>
+    {{else if eq .Type "divider"}}
+        <hr class="border-white/10 my-2">
+    {{else if eq .Type "spacer"}}
+        <div style="height: {{.Height}}px"></div>
+    {{else if eq .Type "contact"}}
+        <h3 class="text-xs uppercase tracking-wide text-gray-500 mb-3">Contact</h3>
+        <div class="space-y-1.5 text-gray-300">
+            {{if .Email}}<div>{{.Email}}</div>{{end}}
+            {{if .Phone}}<div>{{.Phone}}</div>{{end}}
+            {{if .Location}}<div>{{.Location}}</div>{{end}}
+        </div>
+    {{else if eq .Type "social_links"}}
+        <h3 class="text-xs uppercase tracking-wide text-gray-500 mb-3">Links</h3>
+        <div class="space-y-1.5">
+            {{if .LinkedIn}}<div><a href="{{.LinkedIn}}" class="text-brand2 hover:underline">LinkedIn</a></div>{{end}}
+            {{if .Github}}<div><a href="{{.Github}}" class="text-brand2 hover:underline">GitHub</a></div>{{end}}
+            {{if .Website}}<div><a href="{{.Website}}" class="text-brand2 hover:underline">Website</a></div>{{end}}
+        </div>
+    {{else if eq .Type "embed"}}
+        {{if .URL}}
+        <div class="relative w-full h-full" style="min-height: 200px;">
+            <iframe src="{{.URL}}" class="absolute inset-0 w-full h-full rounded-xl" frameborder="0" allowfullscreen></iframe>
+        </div>
+        {{end}}
+    {{else if eq .Type "image"}}
+        {{if .ImageURL}}
+        <img src="{{.ImageURL}}" alt="{{.Alt}}" class="w-full h-full object-cover rounded-xl">
+        {{end}}
+    {{else if eq .Type "gallery"}}
+        <h3 class="text-xs uppercase tracking-wide text-gray-500 mb-3">Gallery</h3>
+        <p class="text-sm text-gray-500">Coming soon</p>
+    {{else if eq .Type "skill_list"}}
+        <h3 class="text-xs uppercase tracking-wide text-gray-500 mb-3">Skills</h3>
+        <div class="flex flex-wrap gap-2">{{range .Items}}<span class="pill bg-white/5 text-gray-300 px-3 py-1">{{.Title}}</span>{{end}}</div>
+    {{else if or (eq .Type "experience_list") (eq .Type "education_list")}}
+        <h3 class="text-xs uppercase tracking-wide text-gray-500 mb-4">{{if eq .Type "experience_list"}}Experience{{else}}Education{{end}}</h3>
+        <div class="space-y-5">
+            {{range .Items}}
+            <div>
+                <div class="flex flex-wrap justify-between items-baseline gap-2">
+                    <span class="font-semibold">{{.Title}}</span>
+                    {{if .StartDate}}<span class="text-xs text-gray-500">{{.StartDate}}{{if .EndDate}} – {{.EndDate}}{{end}}</span>{{end}}
+                </div>
+                {{if .Subtitle}}<div class="text-sm text-brand2 mt-0.5">{{.Subtitle}}</div>{{end}}
+                {{if .Description}}<p class="text-sm text-gray-400 mt-1.5">{{.Description}}</p>{{end}}
+            </div>
+            {{end}}
+        </div>
+    {{else if eq .Type "project_card"}}
+        <h3 class="font-display font-bold text-lg">{{.Title}}</h3>
+        {{if .Body}}<p class="text-sm text-gray-400 mt-2">{{.Body}}</p>{{end}}
+        <div class="flex flex-wrap gap-1.5 mt-3">{{range .Technologies}}<span class="pill bg-brand/10 text-brand2 px-2.5 py-1 text-xs">{{.}}</span>{{end}}</div>
+        {{if .URL}}<a href="{{.URL}}" class="text-sm text-brand2 hover:underline inline-block mt-3">{{.URL}} →</a>{{end}}
+    {{end}}
+</div>
+{{end}}

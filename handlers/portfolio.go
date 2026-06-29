@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"html/template"
 	"net/http"
@@ -157,6 +158,33 @@ func (h *PortfolioHandler) ToggleVisibility(w http.ResponseWriter, r *http.Reque
 		title="` + action + `">` + label + `</button>`))
 }
 
+// ToggleBuilderMode flips a portfolio between classic and canvas mode.
+// Minimal version ahead of the full conversion/rollout UX (no starter
+// layout seeding or "revert" safety net yet) — just enough to verify
+// canvas-mode public rendering end-to-end.
+func (h *PortfolioHandler) ToggleBuilderMode(w http.ResponseWriter, r *http.Request) {
+	user := middleware.UserFromContext(r.Context())
+	portfolio, err := models.FindPortfolioByUserID(r.Context(), h.db, user.ID)
+	if err != nil || portfolio == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	mode, err := models.ToggleBuilderMode(r.Context(), h.db, portfolio.ID)
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	label, action := "Classic editor", "Switch to canvas builder"
+	if mode == "canvas" {
+		label, action = "Canvas builder (preview)", "Switch to classic editor"
+	}
+	w.Write([]byte(`<button id="builder-mode-toggle" hx-post="/dashboard/builder-mode/toggle" hx-target="this" hx-swap="outerHTML"
+		class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-300"
+		title="` + action + `">` + label + `</button>`))
+}
+
 // PublicItemView flattens a SectionItem's pointer fields and JSONB meta into
 // plain values the public theme templates can render directly.
 type PublicItemView struct {
@@ -244,6 +272,11 @@ func (h *PortfolioHandler) PublicView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if portfolio.BuilderMode == "canvas" {
+		h.renderPublicCanvas(w, ctx, portfolio)
+		return
+	}
+
 	sections, err := models.ListSectionsByPortfolio(ctx, h.db, portfolio.ID)
 	if err != nil {
 		http.Error(w, "server error", http.StatusInternalServerError)
@@ -276,6 +309,39 @@ func (h *PortfolioHandler) PublicView(w http.ResponseWriter, r *http.Request) {
 	if err := tmpl.ExecuteTemplate(w, "portfolio_page", map[string]any{
 		"Portfolio": portfolio,
 		"Sections":  views,
+	}); err != nil {
+		http.Error(w, "template render error", http.StatusInternalServerError)
+	}
+}
+
+// renderPublicCanvas renders a canvas-mode portfolio's public page: every
+// visible block placed on a CSS grid matching its editor position, with no
+// editor chrome (no drag handles, no edit/hide/delete buttons) — reuses
+// buildBlockView (handlers/block.go) for the same JSONB-to-plain-fields
+// flattening the editor uses, since the data shape is identical.
+func (h *PortfolioHandler) renderPublicCanvas(w http.ResponseWriter, ctx context.Context, portfolio *models.Portfolio) {
+	blocks, err := models.ListBlocksByPortfolio(ctx, h.db, portfolio.ID)
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+
+	views := make([]BlockView, 0, len(blocks))
+	for _, b := range blocks {
+		if !b.IsVisible {
+			continue
+		}
+		views = append(views, buildBlockView(b))
+	}
+
+	tmpl, err := parseTemplates("templates/portfolio/canvas.html")
+	if err != nil {
+		http.Error(w, "template error", http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.ExecuteTemplate(w, "portfolio_page", map[string]any{
+		"Portfolio": portfolio,
+		"Blocks":    views,
 	}); err != nil {
 		http.Error(w, "template render error", http.StatusInternalServerError)
 	}

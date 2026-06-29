@@ -94,6 +94,7 @@ func main() {
 		r.Get("/dashboard/profile/{field}/edit", portfolioHandler.EditField)
 		r.Put("/dashboard/profile/{field}", portfolioHandler.UpdateField)
 		r.Post("/dashboard/visibility", portfolioHandler.ToggleVisibility)
+		r.Post("/dashboard/builder-mode/toggle", portfolioHandler.ToggleBuilderMode)
 		r.Post("/dashboard/theme", themeHandler.Switch)
 
 		r.Get("/dashboard/sections/new", sectionHandler.NewPage)

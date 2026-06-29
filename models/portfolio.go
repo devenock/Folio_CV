@@ -25,6 +25,7 @@ type Portfolio struct {
 	AvatarURL   *string
 	CareerType  string
 	Theme       string
+	BuilderMode string
 	IsPublic    bool
 	RawJSON     json.RawMessage
 	CVFilename  *string
@@ -36,7 +37,7 @@ type Portfolio struct {
 const portfolioColumns = `
 	id, user_id, slug, full_name, headline, summary, email, phone, location,
 	linkedin_url, github_url, website_url, avatar_url, career_type, theme,
-	is_public, raw_json, cv_filename, cv_parsed_at, created_at, updated_at
+	builder_mode, is_public, raw_json, cv_filename, cv_parsed_at, created_at, updated_at
 `
 
 func scanPortfolio(row pgx.Row) (*Portfolio, error) {
@@ -44,7 +45,7 @@ func scanPortfolio(row pgx.Row) (*Portfolio, error) {
 	err := row.Scan(
 		&p.ID, &p.UserID, &p.Slug, &p.FullName, &p.Headline, &p.Summary, &p.Email,
 		&p.Phone, &p.Location, &p.LinkedInURL, &p.GithubURL, &p.WebsiteURL,
-		&p.AvatarURL, &p.CareerType, &p.Theme, &p.IsPublic, &p.RawJSON,
+		&p.AvatarURL, &p.CareerType, &p.Theme, &p.BuilderMode, &p.IsPublic, &p.RawJSON,
 		&p.CVFilename, &p.CVParsedAt, &p.CreatedAt, &p.UpdatedAt,
 	)
 	if err != nil {
@@ -146,4 +147,21 @@ func ToggleIsPublic(ctx context.Context, pool *pgxpool.Pool, id string) (bool, e
 		RETURNING is_public
 	`, id).Scan(&isPublic)
 	return isPublic, err
+}
+
+// ToggleBuilderMode flips a portfolio between the classic section/item
+// editor and the canvas block builder, and returns the new mode. This is
+// the early, minimal version of mode-switching ahead of the full
+// conversion/rollout UX (seeding a sensible starter layout, "revert"
+// safety, etc.) planned for a later phase.
+func ToggleBuilderMode(ctx context.Context, pool *pgxpool.Pool, id string) (string, error) {
+	var mode string
+	err := pool.QueryRow(ctx, `
+		UPDATE portfolios SET
+			builder_mode = CASE WHEN builder_mode = 'classic' THEN 'canvas'::builder_mode ELSE 'classic'::builder_mode END,
+			updated_at = NOW()
+		WHERE id = $1
+		RETURNING builder_mode
+	`, id).Scan(&mode)
+	return mode, err
 }
