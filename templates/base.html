@@ -1,0 +1,63 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}FolioCV{{end}}</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="https://unpkg.com/htmx.org@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/image-crop.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        editor: {
+                            bg:      '#070710',
+                            surface: '#0d0d18',
+                            card:    '#13131f',
+                            border:  '#23232f',
+                            muted:   '#4b4b5e',
+                        },
+                        brand:  '#7c5cff',
+                        brand2: '#22d3ee',
+                        success: '#22c55e',
+                        warn: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+        htmx.config.globalViewTransitions = true;
+    </script>
+</head>
+<body hx-boost="true" class="bg-editor-bg text-gray-100 min-h-screen font-sans antialiased">
+    <div class="mesh-bg"></div>
+
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-editor-bg/70 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="font-display text-xl font-bold text-gradient tracking-tight">FolioCV</a>
+            <div class="flex items-center gap-2">
+                {{if .User}}
+                    <a href="/upload" class="text-sm text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">Upload</a>
+                    <a href="/dashboard" class="text-sm text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">Dashboard</a>
+                    <form action="/logout" method="POST" class="ml-1">
+                        <button type="submit" class="text-sm btn-ghost rounded-lg px-3 py-2 text-gray-300 hover:text-white">Logout</button>
+                    </form>
+                {{else}}
+                    <a href="/login" class="text-sm text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">Sign In</a>
+                    <a href="/register" class="text-sm btn-primary rounded-lg px-4 py-2">Get Started</a>
+                {{end}}
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 animate-fade-up">
+        {{template "content" .}}
+    </main>
+</body>
+</html>
+{{end}}

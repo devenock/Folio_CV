@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FolioCV — Your CV is the source. Your portfolio is the story.</title>
+    <meta name="description" content="Upload your CV and let Claude turn it into a beautiful, shareable portfolio page in under a minute.">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        editor: { bg: '#070710', card: '#13131f', border: '#23232f' },
+                        brand:  '#7c5cff',
+                        brand2: '#22d3ee',
+                        brand3: '#f472b6',
+                    }
+                }
+            }
+        }
+    </script>
+    <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body class="bg-editor-bg text-gray-100 min-h-screen font-sans antialiased overflow-x-hidden">
+    <div class="mesh-bg"></div>
+
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-editor-bg/70 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <span class="font-display text-xl font-bold text-gradient tracking-tight">FolioCV</span>
+            <div class="hidden md:flex items-center gap-6 text-sm text-gray-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#themes" class="hover:text-white transition-colors">Themes</a>
+                <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="/login" class="text-sm text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">Sign In</a>
+                <a href="/register" class="text-sm btn-primary rounded-lg px-4 py-2">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <main class="max-w-4xl mx-auto px-6 pt-20 pb-8 text-center">
+        <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-gray-300 mb-8 animate-fade-up">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand2 animate-pulse-glow"></span>
+            Parsed by Claude in seconds
+        </div>
+
+        <h1 class="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] animate-fade-up stagger-1">
+            Your CV is the source.<br>
+            <span class="text-gradient">Your portfolio is the story.</span>
+        </h1>
+
+        <p class="mt-6 text-lg text-gray-400 max-w-xl mx-auto animate-fade-up stagger-2">
+            Upload your CV and watch Claude turn it into a beautiful, shareable portfolio page —
+            tailored to your career, ready in under a minute.
+        </p>
+
+        <div class="mt-10 flex items-center justify-center gap-4 animate-fade-up stagger-3">
+            <a href="/register" class="btn-primary rounded-xl px-7 py-3.5 text-base">Get Started Free</a>
+            <a href="/login" class="text-gray-300 hover:text-white font-medium px-4 py-3.5">Sign In →</a>
+        </div>
+    </main>
+
+    <!-- Browser mockup -->
+    <div class="max-w-3xl mx-auto px-6 pb-24 animate-fade-up stagger-4">
+        <div class="glass rounded-2xl overflow-hidden shadow-2xl shadow-brand/10">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
+                <span class="w-2.5 h-2.5 rounded-full bg-danger/70"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-warn/70"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-success/70"></span>
+                <span class="ml-3 text-xs text-gray-500 font-mono">foliocv.app/p/jordan-lee</span>
+            </div>
+            <div class="p-8 bg-editor-bg/60">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center font-display font-bold text-lg shrink-0">JL</div>
+                    <div class="text-left">
+                        <div class="font-display text-xl font-bold">Jordan Lee</div>
+                        <div class="text-sm text-gray-400">Senior Product Designer</div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-5">
+                    <span class="pill bg-white/5 text-gray-300">Figma</span>
+                    <span class="pill bg-white/5 text-gray-300">Design Systems</span>
+                    <span class="pill bg-white/5 text-gray-300">UX Research</span>
+                    <span class="pill bg-white/5 text-gray-300">Prototyping</span>
+                </div>
+                <div class="mt-6 h-2 rounded-full bg-white/5 overflow-hidden">
+                    <div class="h-full w-2/3 bg-gradient-to-r from-brand to-brand2 rounded-full"></div>
+                </div>
+                <div class="mt-2 text-xs text-gray-500 text-left">Generated from a 2-page PDF in 14 seconds</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <section class="max-w-4xl mx-auto px-6 pb-24 reveal">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand to-brand2 mb-4 flex items-center justify-center text-sm font-bold">1</div>
+                <h3 class="font-display font-semibold mb-1">Upload your CV</h3>
+                <p class="text-sm text-gray-400">PDF or DOCX. That's the only input you need.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand to-brand2 mb-4 flex items-center justify-center text-sm font-bold">2</div>
+                <h3 class="font-display font-semibold mb-1">Claude parses it</h3>
+                <p class="text-sm text-gray-400">Career type, sections, and layout are inferred automatically.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand to-brand2 mb-4 flex items-center justify-center text-sm font-bold">3</div>
+                <h3 class="font-display font-semibold mb-1">Share your link</h3>
+                <p class="text-sm text-gray-400">Edit inline, pick a theme, and send a clean public URL.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats strip -->
+    <section class="border-y border-white/5 bg-white/[0.015] reveal">
+        <div class="max-w-4xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="font-display text-3xl font-bold text-gradient">3</div>
+                <div class="text-xs text-gray-500 mt-1">Portfolio themes</div>
+            </div>
+            <div>
+                <div class="font-display text-3xl font-bold text-gradient">&lt;1 min</div>
+                <div class="text-xs text-gray-500 mt-1">Typical parse time</div>
+            </div>
+            <div>
+                <div class="font-display text-3xl font-bold text-gradient">100%</div>
+                <div class="text-xs text-gray-500 mt-1">Inline editable</div>
+            </div>
+            <div>
+                <div class="font-display text-3xl font-bold text-gradient">1-click</div>
+                <div class="text-xs text-gray-500 mt-1">Public share link</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="max-w-5xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-12">
+            <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">Everything you need, nothing you have to build</h2>
+            <p class="text-gray-400 mt-3 max-w-lg mx-auto">FolioCV does the layout work so you can focus on the words.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">✦</div>
+                <h3 class="font-display font-semibold mb-1.5">AI-powered parsing</h3>
+                <p class="text-sm text-gray-400">Claude reads your CV and detects your career type, then structures every section automatically.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">⇄</div>
+                <h3 class="font-display font-semibold mb-1.5">Drag-and-drop editing</h3>
+                <p class="text-sm text-gray-400">Reorder sections and entries by dragging — changes save instantly, no publish button.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">✎</div>
+                <h3 class="font-display font-semibold mb-1.5">Inline text editing</h3>
+                <p class="text-sm text-gray-400">Click any field — your name, summary, contact info — and edit it directly on the page.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">◐</div>
+                <h3 class="font-display font-semibold mb-1.5">Three distinct themes</h3>
+                <p class="text-sm text-gray-400">Professional, creative, or minimal — switch any time, your content carries over.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">⤴</div>
+                <h3 class="font-display font-semibold mb-1.5">Re-upload anytime</h3>
+                <p class="text-sm text-gray-400">New CV version? Re-upload and new entries merge in — your manual edits stay put.</p>
+            </div>
+            <div class="glass glass-hover rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand2 flex items-center justify-center mb-4 text-lg">⊘</div>
+                <h3 class="font-display font-semibold mb-1.5">Public or private</h3>
+                <p class="text-sm text-gray-400">Toggle your page's visibility whenever you want — share the link only when you're ready.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Themes showcase -->
+    <section id="themes" class="max-w-5xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-12">
+            <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">Pick a look that fits you</h2>
+            <p class="text-gray-400 mt-3 max-w-lg mx-auto">Three themes, one set of content — switch instantly from your dashboard.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="rounded-2xl overflow-hidden border border-white/5">
+                <div class="bg-white p-5" style="font-family: Georgia, serif;">
+                    <div class="text-[#1e3a5f] font-bold text-lg">Professional</div>
+                    <div class="text-gray-500 text-xs mt-1">Clean, structured, serif headings</div>
+                    <div class="mt-3 h-1.5 w-3/4 bg-gray-200 rounded"></div>
+                    <div class="mt-2 h-1.5 w-1/2 bg-gray-200 rounded"></div>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-gray-500 bg-editor-card">For corporate, finance, legal, healthcare</div>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-white/5">
+                <div class="bg-[#fafaf9] p-5">
+                    <div class="font-display font-extrabold text-lg bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">Creative</div>
+                    <div class="text-gray-500 text-xs mt-1">Bold accents, gallery-friendly</div>
+                    <div class="mt-3 h-1.5 w-3/4 bg-indigo-100 rounded"></div>
+                    <div class="mt-2 h-1.5 w-1/2 bg-indigo-100 rounded"></div>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-gray-500 bg-editor-card">For designers, creatives, marketers</div>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-white/5">
+                <div class="bg-white p-5">
+                    <div class="font-bold text-lg text-black">Minimal</div>
+                    <div class="text-gray-500 text-xs mt-1">Black, white, generous whitespace</div>
+                    <div class="mt-3 h-1.5 w-3/4 bg-gray-100 rounded"></div>
+                    <div class="mt-2 h-1.5 w-1/2 bg-gray-100 rounded"></div>
+                </div>
+                <div class="px-4 py-2.5 text-xs text-gray-500 bg-editor-card">For developers, academics, generalists</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="max-w-3xl mx-auto px-6 py-24 reveal">
+        <div class="text-center mb-12">
+            <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">Questions, answered</h2>
+        </div>
+        <div class="space-y-3">
+            <details class="group glass rounded-xl px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
+                    What file formats can I upload?
+                    <span class="text-gray-500 group-open:rotate-180 transition-transform">⌄</span>
+                </summary>
+                <p class="text-sm text-gray-400 mt-3">PDF and DOCX, up to 10MB. Most CVs export well under that.</p>
+            </details>
+            <details class="group glass rounded-xl px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
+                    Does it work for non-technical careers?
+                    <span class="text-gray-500 group-open:rotate-180 transition-transform">⌄</span>
+                </summary>
+                <p class="text-sm text-gray-400 mt-3">Yes — Claude detects your career type from the CV itself, so nurses, teachers, designers, and accountants all get sections and a theme that fit, not a developer-shaped template.</p>
+            </details>
+            <details class="group glass rounded-xl px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
+                    Can I edit the content after it's generated?
+                    <span class="text-gray-500 group-open:rotate-180 transition-transform">⌄</span>
+                </summary>
+                <p class="text-sm text-gray-400 mt-3">Every field is click-to-edit, sections and entries drag to reorder, and you can hide any section without deleting it.</p>
+            </details>
+            <details class="group glass rounded-xl px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer font-medium list-none">
+                    Who can see my portfolio?
+                    <span class="text-gray-500 group-open:rotate-180 transition-transform">⌄</span>
+                </summary>
+                <p class="text-sm text-gray-400 mt-3">Only people you share your link with — and only while your portfolio is set to public. Flip it private any time.</p>
+            </details>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="max-w-3xl mx-auto px-6 pb-24 reveal">
+        <div class="glass rounded-2xl p-10 text-center">
+            <h2 class="font-display text-2xl md:text-3xl font-bold mb-3">Your portfolio is one upload away</h2>
+            <p class="text-gray-400 mb-6">No design work. No blank page. Just your CV.</p>
+            <a href="/register" class="btn-primary rounded-xl px-7 py-3.5 text-base inline-block">Get Started Free</a>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+            <span class="font-display text-gray-400">FolioCV</span>
+            <span>Your CV is the source. Your portfolio is the story.</span>
+        </div>
+    </footer>
+
+    <script>
+        if ('IntersectionObserver' in window) {
+            var revealEls = document.querySelectorAll('.reveal');
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            revealEls.forEach(function (el) { observer.observe(el); });
+        } else {
+            document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+        }
+    </script>
+</body>
+</html>
