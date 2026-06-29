@@ -1,0 +1,14 @@
+{{define "title"}}Processing your CV — FolioCV{{end}}
+{{define "content"}}
+<div class="max-w-lg mx-auto glass rounded-2xl p-10 text-center animate-fade-up">
+    <div class="relative w-16 h-16 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-brand to-brand2 opacity-20 animate-pulse-glow"></div>
+        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-brand border-r-brand2 animate-spin-slow"></div>
+    </div>
+    <h1 class="font-display text-2xl font-bold mb-2">Building your portfolio</h1>
+    <p class="text-gray-400 text-sm mb-6">Usually done in 5–15 seconds.</p>
+    <div id="status-container" hx-get="/upload/status" hx-trigger="load, every 1500ms" hx-swap="outerHTML">
+        <span class="text-sm text-gray-400">Reading your document…</span>
+    </div>
+</div>
+{{end}}

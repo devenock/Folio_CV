@@ -1,0 +1,54 @@
+{{define "title"}}Upload your CV — FolioCV{{end}}
+{{define "content"}}
+<div class="max-w-lg mx-auto glass rounded-2xl p-8 animate-fade-up">
+    <h1 class="font-display text-2xl font-bold mb-1">Upload your CV</h1>
+    <p class="text-gray-400 text-sm mb-6">PDF or DOCX, up to 10MB. Claude reads it and builds your portfolio in seconds.</p>
+    {{if .Error}}
+        <div class="bg-danger/10 border border-danger/40 text-danger rounded-lg px-4 py-2.5 mb-4 text-sm animate-fade">{{.Error}}</div>
+    {{end}}
+    <form method="POST" action="/upload" enctype="multipart/form-data" hx-boost="false" class="space-y-5">
+        <label id="dropzone" for="cv-input"
+               class="group relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/15 hover:border-brand/60 bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer px-6 py-10 text-center">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center text-xl animate-float">↑</div>
+            <div class="text-sm text-gray-300"><span id="dropzone-label">Drag &amp; drop your CV, or click to browse</span></div>
+            <div class="text-xs text-gray-500">PDF or DOCX · up to 10MB</div>
+            <input id="cv-input" type="file" name="cv" required accept=".pdf,.docx" class="sr-only">
+        </label>
+        <button type="submit" class="w-full btn-primary rounded-lg px-4 py-2.5">Upload &amp; Parse</button>
+    </form>
+</div>
+
+<script>
+    (function () {
+        var input = document.getElementById('cv-input');
+        var zone = document.getElementById('dropzone');
+        var label = document.getElementById('dropzone-label');
+        if (!input || !zone) return;
+
+        input.addEventListener('change', function () {
+            if (input.files && input.files[0]) {
+                label.textContent = input.files[0].name;
+            }
+        });
+
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            zone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                zone.classList.add('border-brand', 'bg-white/[0.06]');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            zone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                zone.classList.remove('border-brand', 'bg-white/[0.06]');
+            });
+        });
+        zone.addEventListener('drop', function (e) {
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                input.files = e.dataTransfer.files;
+                label.textContent = e.dataTransfer.files[0].name;
+            }
+        });
+    })();
+</script>
+{{end}}
