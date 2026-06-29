@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS blocks;
+DROP TYPE IF EXISTS block_type;
