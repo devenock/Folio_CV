@@ -1,0 +1,22 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/foliocv ."
+  bin = "./tmp/foliocv"
+  include_ext = ["go", "html", "css", "sql"]
+  exclude_dir = ["tmp", "data", "static", "migrations"]
+  delay = 500
+  kill_delay = "0s"
+
+[log]
+  time = true
+
+[color]
+  main = "cyan"
+  watcher = "blue"
+  build = "yellow"
+  runner = "green"
+
+[misc]
+  clean_on_exit = true
