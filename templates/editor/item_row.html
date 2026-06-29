@@ -1,0 +1,19 @@
+{{define "item_row"}}
+<div class="item-row flex items-center justify-between gap-3 bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 rounded-lg px-3 py-2.5 transition-colors" data-id="{{.Item.ID}}" id="item-{{.Item.ID}}">
+    <input type="hidden" name="id" value="{{.Item.ID}}">
+    <span class="drag-handle cursor-grab text-gray-500 hover:text-gray-300 select-none transition-colors">⠿</span>
+    <div class="flex-1 min-w-0">
+        <div class="text-sm font-medium truncate">{{deref .Item.Title}}</div>
+        <div class="text-xs text-gray-500 truncate">
+            {{if .Item.Subtitle}}{{deref .Item.Subtitle}}{{end}}
+            {{if .Item.StartDate}} &middot; {{deref .Item.StartDate}}{{if .Item.EndDate}} &ndash; {{deref .Item.EndDate}}{{end}}{{end}}
+        </div>
+    </div>
+    <div class="flex items-center gap-1.5 shrink-0">
+        <button hx-get="/dashboard/sections/{{.Section.ID}}/items/{{.Item.ID}}/edit" hx-target="#item-{{.Item.ID}}" hx-swap="outerHTML"
+                class="text-xs px-2 py-1 rounded-md text-gray-400 hover:text-brand2 hover:bg-white/5 transition-colors">Edit</button>
+        <button hx-delete="/dashboard/sections/{{.Section.ID}}/items/{{.Item.ID}}" hx-target="#item-{{.Item.ID}}" hx-swap="outerHTML"
+                hx-confirm="Remove this item?" class="text-xs px-2 py-1 rounded-md text-gray-400 hover:text-danger hover:bg-white/5 transition-colors">Delete</button>
+    </div>
+</div>
+{{end}}

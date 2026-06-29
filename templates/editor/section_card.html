@@ -1,0 +1,31 @@
+{{define "section_card"}}
+<div class="section-card glass glass-hover rounded-xl" data-id="{{.Section.ID}}">
+    <input type="hidden" name="id" value="{{.Section.ID}}">
+    <div class="flex items-center justify-between px-4 py-3">
+        <div class="flex items-center gap-3 flex-1">
+            <span class="drag-handle cursor-grab text-gray-500 hover:text-gray-300 select-none transition-colors">⠿</span>
+            <input type="text" name="title" value="{{.Section.Title}}"
+                   hx-post="/dashboard/sections/{{.Section.ID}}/title"
+                   hx-trigger="blur, keyup[key=='Enter']" hx-swap="none"
+                   class="bg-transparent font-display font-medium outline-none border-b border-transparent focus:border-brand px-1 flex-1 transition-colors">
+            <span class="text-xs text-gray-500 pill bg-white/5">{{len .Items}}</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            <button hx-post="/dashboard/sections/{{.Section.ID}}/toggle" hx-target="closest .section-card" hx-swap="outerHTML"
+                    class="text-xs rounded-lg px-2.5 py-1.5 transition-colors {{if .Section.IsVisible}}text-success bg-success/10{{else}}text-gray-500 bg-white/5{{end}}">
+                {{if .Section.IsVisible}}Visible{{else}}Hidden{{end}}
+            </button>
+            <button hx-get="/dashboard/sections/{{.Section.ID}}/edit" hx-target="#section-body-{{.Section.ID}}" hx-swap="innerHTML"
+                    class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-300">
+                Expand
+            </button>
+            <button hx-delete="/dashboard/sections/{{.Section.ID}}" hx-target="closest .section-card" hx-swap="outerHTML"
+                    hx-confirm="Delete this section and all its items?"
+                    class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-400 hover:text-danger">
+                Delete
+            </button>
+        </div>
+    </div>
+    <div id="section-body-{{.Section.ID}}"></div>
+</div>
+{{end}}

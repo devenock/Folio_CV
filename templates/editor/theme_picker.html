@@ -1,0 +1,16 @@
+{{define "theme_picker"}}
+<div id="theme-picker" class="inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/5">
+    <form hx-post="/dashboard/theme" hx-target="#theme-picker" hx-swap="outerHTML">
+        <input type="hidden" name="theme" value="professional">
+        <button type="submit" class="text-sm rounded-lg px-3 py-1.5 transition-all {{if eq .Theme "professional"}}bg-gradient-to-r from-brand to-brand2 text-white shadow-lg shadow-brand/20{{else}}text-gray-400 hover:text-gray-200{{end}}">Professional</button>
+    </form>
+    <form hx-post="/dashboard/theme" hx-target="#theme-picker" hx-swap="outerHTML">
+        <input type="hidden" name="theme" value="creative">
+        <button type="submit" class="text-sm rounded-lg px-3 py-1.5 transition-all {{if eq .Theme "creative"}}bg-gradient-to-r from-brand to-brand2 text-white shadow-lg shadow-brand/20{{else}}text-gray-400 hover:text-gray-200{{end}}">Creative</button>
+    </form>
+    <form hx-post="/dashboard/theme" hx-target="#theme-picker" hx-swap="outerHTML">
+        <input type="hidden" name="theme" value="minimal">
+        <button type="submit" class="text-sm rounded-lg px-3 py-1.5 transition-all {{if eq .Theme "minimal"}}bg-gradient-to-r from-brand to-brand2 text-white shadow-lg shadow-brand/20{{else}}text-gray-400 hover:text-gray-200{{end}}">Minimal</button>
+    </form>
+</div>
+{{end}}

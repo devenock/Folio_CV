@@ -1,0 +1,12 @@
+{{define "section_new_form"}}
+<form class="glass border-brand/40 rounded-xl mb-3 px-4 py-3 flex flex-wrap items-center gap-2 animate-fade-up"
+      hx-post="/dashboard/sections" hx-target="this" hx-swap="outerHTML">
+    <select name="type" class="input-modern rounded-lg px-2.5 py-1.5 text-sm">
+        {{range .}}<option value="{{.}}">{{.}}</option>{{end}}
+    </select>
+    <input type="text" name="title" placeholder="Section title" required
+           class="flex-1 min-w-[10rem] input-modern rounded-lg px-3 py-1.5 text-sm">
+    <button type="submit" class="text-sm btn-primary rounded-lg px-3.5 py-1.5">Add</button>
+    <button type="button" onclick="this.closest('form').remove()" class="text-sm text-gray-400 hover:text-gray-200 transition-colors">Cancel</button>
+</form>
+{{end}}

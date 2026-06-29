@@ -1,0 +1,107 @@
+{{define "title"}}Dashboard — FolioCV{{end}}
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+    <div class="glass rounded-2xl p-6 mb-8 animate-fade-up">
+        <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="flex items-start gap-4">
+                <button type="button" onclick="foliocvChangeAvatar()" id="avatar-badge"
+                        class="group relative w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center font-display font-bold text-lg overflow-hidden"
+                        title="Change photo">
+                    {{if .Portfolio.AvatarURL}}
+                        <img src="{{deref .Portfolio.AvatarURL}}" alt="" class="w-full h-full object-cover">
+                    {{else}}
+                        <span>{{.Portfolio.FullName | printf "%.1s"}}</span>
+                    {{end}}
+                    <span class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px]">Change</span>
+                </button>
+                <div>
+                    <span hx-get="/dashboard/profile/full_name/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML"
+                          class="cursor-pointer hover:text-brand2 transition-colors font-display text-2xl font-bold block">{{.Portfolio.FullName}}</span>
+                    <span hx-get="/dashboard/profile/headline/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML"
+                          class="cursor-pointer hover:text-brand2 transition-colors text-gray-400 block mt-1 text-sm">{{deref .Portfolio.Headline}}</span>
+                </div>
+            </div>
+            <div class="flex flex-col items-end gap-2 shrink-0">
+                <a href="/p/{{.Portfolio.Slug}}" target="_blank" class="text-sm text-brand2 hover:underline font-medium">View public portfolio →</a>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyPortfolioLink(this)" data-url="{{.BaseURL}}/p/{{.Portfolio.Slug}}"
+                            class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-300">Copy link</button>
+                    <button id="visibility-toggle" hx-post="/dashboard/visibility" hx-target="this" hx-swap="outerHTML"
+                            class="text-xs btn-ghost rounded-lg px-2.5 py-1.5 text-gray-300"
+                            title="{{if .Portfolio.IsPublic}}Make private{{else}}Make public{{end}}">
+                        {{if .Portfolio.IsPublic}}Public{{else}}Private{{end}}
+                    </button>
+                </div>
+                <a href="/upload" class="text-xs text-gray-500 hover:text-gray-300 transition">Re-upload CV</a>
+            </div>
+        </div>
+
+        <span hx-get="/dashboard/profile/summary/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML"
+              class="cursor-pointer hover:text-gray-200 transition-colors text-sm text-gray-400 block mb-4 leading-relaxed">{{deref .Portfolio.Summary}}</span>
+
+        <div class="grid grid-cols-2 gap-2 text-sm text-gray-400 mb-5 pb-5 border-b border-white/5">
+            <span hx-get="/dashboard/profile/email/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.Email}}{{deref .Portfolio.Email}}{{else}}+ Add email{{end}}</span>
+            <span hx-get="/dashboard/profile/phone/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.Phone}}{{deref .Portfolio.Phone}}{{else}}+ Add phone{{end}}</span>
+            <span hx-get="/dashboard/profile/location/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.Location}}{{deref .Portfolio.Location}}{{else}}+ Add location{{end}}</span>
+            <span hx-get="/dashboard/profile/linkedin_url/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.LinkedInURL}}{{deref .Portfolio.LinkedInURL}}{{else}}+ Add LinkedIn{{end}}</span>
+            <span hx-get="/dashboard/profile/github_url/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.GithubURL}}{{deref .Portfolio.GithubURL}}{{else}}+ Add GitHub{{end}}</span>
+            <span hx-get="/dashboard/profile/website_url/edit" hx-trigger="click" hx-target="this" hx-swap="outerHTML" class="cursor-pointer hover:text-brand2 transition-colors">{{if .Portfolio.WebsiteURL}}{{deref .Portfolio.WebsiteURL}}{{else}}+ Add website{{end}}</span>
+        </div>
+
+        {{template "theme_picker" .Portfolio}}
+    </div>
+
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Sections</h2>
+    </div>
+    <form class="sortable space-y-3" hx-post="/dashboard/sections/reorder" hx-trigger="end" hx-swap="none">
+        {{range $i, $s := .Sections}}
+        <div class="animate-fade-up" style="animation-delay: {{mul $i 40}}ms">{{template "section_card" $s}}</div>
+        {{end}}
+    </form>
+
+    <button hx-get="/dashboard/sections/new" hx-target="this" hx-swap="outerHTML"
+            class="mt-4 text-sm text-brand2 hover:underline font-medium">+ Add section</button>
+</div>
+
+<script>
+    function initSortables() {
+        document.querySelectorAll('.sortable').forEach(function (el) {
+            if (el.dataset.sortableInit) return;
+            el.dataset.sortableInit = '1';
+            new Sortable(el, {
+                handle: '.drag-handle',
+                animation: 150,
+                onEnd: function () { htmx.trigger(el, 'end'); }
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', initSortables);
+    document.body.addEventListener('htmx:afterSettle', initSortables);
+
+    function copyPortfolioLink(btn) {
+        navigator.clipboard.writeText(btn.dataset.url);
+        var original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = original; }, 1500);
+    }
+
+    function foliocvChangeAvatar() {
+        FolioCVCropper.open({
+            aspectRatio: 1,
+            kind: 'avatar',
+            onSuccess: function (data) {
+                fetch('/dashboard/profile/avatar_url', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ value: data.url }).toString()
+                }).then(function () {
+                    var badge = document.getElementById('avatar-badge');
+                    badge.innerHTML = '<img src="' + data.url + '" alt="" class="w-full h-full object-cover">' +
+                        '<span class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px]">Change</span>';
+                });
+            }
+        });
+    }
+</script>
+{{end}}

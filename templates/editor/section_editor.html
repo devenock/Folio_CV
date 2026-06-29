@@ -1,0 +1,10 @@
+{{define "section_editor"}}
+<div class="border-t border-white/5 px-4 py-3 animate-fade">
+    <div class="space-y-2 sortable" id="items-{{.Section.ID}}"
+         hx-post="/dashboard/sections/{{.Section.ID}}/items/reorder" hx-trigger="end" hx-swap="none">
+        {{range .ItemRows}}{{template "item_row" .}}{{end}}
+    </div>
+    <button hx-get="/dashboard/sections/{{.Section.ID}}/items/new" hx-target="#items-{{.Section.ID}}" hx-swap="beforeend"
+            class="mt-3 text-sm text-brand2 hover:underline font-medium">+ Add item</button>
+</div>
+{{end}}
