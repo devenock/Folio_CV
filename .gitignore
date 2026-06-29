@@ -1,0 +1,7 @@
+.env
+data/
+tmp/
+*.db
+uploads/
+__debug_bin
+sample/
