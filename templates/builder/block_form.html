@@ -1,0 +1,54 @@
+{{define "block_form"}}
+<form hx-put="/dashboard/blocks/{{.ID}}" hx-target="#block-{{.ID}}-body" hx-swap="innerHTML" class="space-y-2 animate-fade">
+    {{if eq .Type "hero"}}
+        <input type="text" name="name" value="{{.Text}}" placeholder="Your name" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="headline" value="{{.Headline}}" placeholder="Headline" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "heading"}}
+        <input type="text" name="text" value="{{.Text}}" placeholder="Heading" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "text"}}
+        <textarea name="body" rows="4" placeholder="Text" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">{{.Text}}</textarea>
+    {{else if eq .Type "button"}}
+        <input type="text" name="label" value="{{.Label}}" placeholder="Button label" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="url" value="{{.URL}}" placeholder="URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "divider"}}
+        <p class="text-xs text-gray-500">No settings for a divider.</p>
+    {{else if eq .Type "spacer"}}
+        <input type="number" name="height" value="{{.Height}}" placeholder="Height in px" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "contact"}}
+        <input type="text" name="email" value="{{.Email}}" placeholder="Email" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="phone" value="{{.Phone}}" placeholder="Phone" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="location" value="{{.Location}}" placeholder="Location" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "social_links"}}
+        <input type="text" name="linkedin" value="{{.LinkedIn}}" placeholder="LinkedIn URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="github" value="{{.Github}}" placeholder="GitHub URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="website" value="{{.Website}}" placeholder="Website URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "embed"}}
+        <input type="text" name="url" value="{{.URL}}" placeholder="YouTube/Vimeo URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "image"}}
+        <div id="image-preview-{{.ID}}" class="rounded-lg overflow-hidden bg-white/[0.03] border border-white/5 {{if not .ImageURL}}h-20 flex items-center justify-center text-xs text-gray-500{{end}}">
+            {{if .ImageURL}}<img src="{{.ImageURL}}" class="w-full h-32 object-cover">{{else}}No image selected{{end}}
+        </div>
+        <button type="button" onclick="foliocvPickBlockImage('{{.ID}}')" class="text-xs btn-ghost rounded-lg px-3 py-1.5 text-gray-300">Choose image</button>
+        <input type="hidden" name="url" id="block-image-url-{{.ID}}" value="{{.ImageURL}}">
+        <input type="text" name="alt" value="{{.Alt}}" placeholder="Alt text" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if eq .Type "gallery"}}
+        <p class="text-xs text-gray-500">Gallery upload is coming in a later phase.</p>
+    {{else if eq .Type "skill_list"}}
+        <input type="text" name="items_csv" value="{{.ItemsCSV}}" placeholder="Comma-separated skills" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{else if or (eq .Type "experience_list") (eq .Type "education_list")}}
+        <p class="text-xs text-gray-500 mb-1">One entry per line: Title | Subtitle | Start | End | Description</p>
+        <textarea name="items_lines" rows="5" class="w-full input-modern rounded-lg px-3 py-1.5 text-xs font-mono">{{.ItemsLines}}</textarea>
+    {{else if eq .Type "project_card"}}
+        <input type="text" name="title" value="{{.Title}}" placeholder="Project name" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <textarea name="body" rows="2" placeholder="Description" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">{{.Body}}</textarea>
+        <input type="text" name="url" value="{{.URL}}" placeholder="URL" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+        <input type="text" name="technologies_csv" value="{{.TechnologiesCSV}}" placeholder="Comma-separated technologies" class="w-full input-modern rounded-lg px-3 py-1.5 text-sm">
+    {{end}}
+
+    <div class="flex items-center gap-2 pt-1">
+        <button type="submit" class="text-xs btn-primary rounded-lg px-3 py-1.5">Save</button>
+        <button type="button" hx-get="/dashboard/blocks/{{.ID}}" hx-target="#block-{{.ID}}-body" hx-swap="innerHTML"
+                class="text-xs text-gray-400 hover:text-gray-200 transition-colors">Cancel</button>
+    </div>
+</form>
+{{end}}

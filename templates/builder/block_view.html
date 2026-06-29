@@ -1,0 +1,74 @@
+{{define "block_view"}}
+<div class="h-full w-full flex flex-col rounded-xl border border-white/5 bg-white/[0.02] {{if not .IsVisible}}opacity-40{{end}}" id="block-{{.ID}}-wrapper">
+    <div class="block-drag-handle cursor-grab flex items-center justify-between px-2 py-1 border-b border-white/5 shrink-0">
+        <span class="text-[10px] uppercase tracking-wide text-gray-500">{{.Type}}</span>
+        <div class="flex items-center gap-1" onmousedown="event.stopPropagation()">
+            <button hx-get="/dashboard/blocks/{{.ID}}/edit" hx-target="#block-{{.ID}}-body" hx-swap="innerHTML"
+                    class="text-[10px] px-1.5 py-0.5 rounded hover:bg-white/10 text-gray-400 hover:text-brand2 transition-colors">Edit</button>
+            <button hx-post="/dashboard/blocks/{{.ID}}/toggle" hx-target="#block-{{.ID}}-wrapper" hx-swap="outerHTML"
+                    class="text-[10px] px-1.5 py-0.5 rounded hover:bg-white/10 text-gray-400 transition-colors">{{if .IsVisible}}Hide{{else}}Show{{end}}</button>
+            <button onclick="foliocvDeleteBlock('{{.ID}}')"
+                    class="text-[10px] px-1.5 py-0.5 rounded hover:bg-white/10 text-gray-400 hover:text-danger transition-colors">✕</button>
+        </div>
+    </div>
+    <div id="block-{{.ID}}-body" class="flex-1 overflow-auto p-3 text-sm">
+        {{template "block_body" .}}
+    </div>
+</div>
+{{end}}
+
+{{define "block_body"}}
+    {{if eq .Type "hero"}}
+        <div class="font-display text-xl font-bold">{{.Text}}</div>
+        {{if .Headline}}<div class="text-gray-400 mt-1">{{.Headline}}</div>{{end}}
+    {{else if eq .Type "heading"}}
+        <div class="font-display text-xl font-bold">{{.Text}}</div>
+    {{else if eq .Type "text"}}
+        <p class="text-gray-300 whitespace-pre-wrap">{{.Text}}</p>
+    {{else if eq .Type "button"}}
+        <a href="{{.URL}}" class="btn-primary rounded-lg px-4 py-2 inline-block text-sm">{{if .Label}}{{.Label}}{{else}}Button{{end}}</a>
+    {{else if eq .Type "divider"}}
+        <hr class="border-white/10">
+    {{else if eq .Type "spacer"}}
+        <div style="height: {{.Height}}px" class="text-[10px] text-gray-600 flex items-center justify-center">spacer ({{.Height}}px)</div>
+    {{else if eq .Type "contact"}}
+        <div class="space-y-1 text-gray-300">
+            {{if .Email}}<div>{{.Email}}</div>{{end}}
+            {{if .Phone}}<div>{{.Phone}}</div>{{end}}
+            {{if .Location}}<div>{{.Location}}</div>{{end}}
+        </div>
+    {{else if eq .Type "social_links"}}
+        <div class="space-y-1">
+            {{if .LinkedIn}}<div><a href="{{.LinkedIn}}" class="text-brand2 hover:underline">LinkedIn</a></div>{{end}}
+            {{if .Github}}<div><a href="{{.Github}}" class="text-brand2 hover:underline">GitHub</a></div>{{end}}
+            {{if .Website}}<div><a href="{{.Website}}" class="text-brand2 hover:underline">Website</a></div>{{end}}
+        </div>
+    {{else if eq .Type "embed"}}
+        {{if .URL}}<div class="text-xs text-gray-400">Embed URL set: {{.URL}}</div>{{else}}<div class="text-xs text-gray-500">No embed URL set</div>{{end}}
+    {{else if eq .Type "image"}}
+        {{if .ImageURL}}
+        <img src="{{.ImageURL}}" alt="{{.Alt}}" class="w-full h-full object-cover rounded">
+        {{else}}
+        <div class="h-full border-2 border-dashed border-white/15 rounded flex items-center justify-center text-gray-500 text-xs text-center px-2">No image yet — click Edit to upload one</div>
+        {{end}}
+    {{else if eq .Type "gallery"}}
+        <div class="h-full border-2 border-dashed border-white/15 rounded flex items-center justify-center text-gray-500 text-xs">Gallery upload coming in a later phase</div>
+    {{else if eq .Type "skill_list"}}
+        <div class="flex flex-wrap gap-1">{{range .Items}}<span class="pill bg-white/5 text-gray-300">{{.Title}}</span>{{end}}</div>
+    {{else if or (eq .Type "experience_list") (eq .Type "education_list")}}
+        <div class="space-y-2">
+            {{range .Items}}
+            <div>
+                <div class="font-medium text-sm">{{.Title}}</div>
+                <div class="text-xs text-gray-500">{{.Subtitle}}{{if .StartDate}} &middot; {{.StartDate}}{{if .EndDate}}&ndash;{{.EndDate}}{{end}}{{end}}</div>
+                {{if .Description}}<div class="text-xs text-gray-400 mt-0.5">{{.Description}}</div>{{end}}
+            </div>
+            {{end}}
+        </div>
+    {{else if eq .Type "project_card"}}
+        <div class="font-medium text-sm">{{.Title}}</div>
+        {{if .Body}}<p class="text-xs text-gray-400 mt-1">{{.Body}}</p>{{end}}
+        <div class="flex flex-wrap gap-1 mt-2">{{range .Technologies}}<span class="pill bg-white/5 text-gray-400 text-[10px]">{{.}}</span>{{end}}</div>
+        {{if .URL}}<a href="{{.URL}}" class="text-xs text-brand2 hover:underline">{{.URL}}</a>{{end}}
+    {{end}}
+{{end}}

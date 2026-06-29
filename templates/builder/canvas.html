@@ -1,0 +1,111 @@
+{{define "title"}}Page Builder — FolioCV{{end}}
+{{define "content"}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@9/dist/gridstack.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gridstack@9/dist/gridstack-all.js"></script>
+
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="font-display text-2xl font-bold mb-1">Page Builder</h1>
+            <p class="text-sm text-gray-400">Drag a block by its header bar, resize from the corner. Early preview — not yet linked from your dashboard.</p>
+        </div>
+        <div class="relative shrink-0">
+            <button onclick="document.getElementById('block-palette').classList.toggle('hidden')" class="btn-primary rounded-lg px-4 py-2 text-sm">+ Add block</button>
+            <div id="block-palette" class="hidden absolute right-0 mt-2 glass rounded-xl p-2 w-48 z-50 grid grid-cols-1 gap-0.5 max-h-80 overflow-auto">
+                {{range .BlockTypes}}
+                <button onclick="foliocvAddBlock('{{.}}')" class="text-left text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 text-gray-300 transition-colors">{{.}}</button>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-stack glass rounded-2xl p-2" id="canvas-grid">
+        {{range .Blocks}}
+        <div class="grid-stack-item" gs-id="{{.ID}}" gs-x="{{.GridX}}" gs-y="{{.GridY}}" gs-w="{{.GridW}}" gs-h="{{.GridH}}">
+            <div class="grid-stack-item-content">{{template "block_view" .}}</div>
+        </div>
+        {{end}}
+    </div>
+
+    {{if not .Blocks}}
+    <p class="text-center text-sm text-gray-500 mt-6">No blocks yet — click "+ Add block" to start building.</p>
+    {{end}}
+</div>
+
+<script>
+(function () {
+    var grid = GridStack.init({
+        cellHeight: 60,
+        margin: 8,
+        float: true,
+        column: 12,
+        handle: '.block-drag-handle'
+    }, '#canvas-grid');
+
+    var pending = {};
+    var flushTimer = null;
+
+    grid.on('change', function (event, items) {
+        (items || []).forEach(function (item) {
+            pending[item.id] = { grid_x: item.x, grid_y: item.y, grid_w: item.w, grid_h: item.h };
+        });
+        clearTimeout(flushTimer);
+        flushTimer = setTimeout(flushPositions, 500);
+    });
+
+    function flushPositions() {
+        Object.keys(pending).forEach(function (id) {
+            var p = pending[id];
+            fetch('/dashboard/blocks/' + id + '/position', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(p).toString()
+            });
+        });
+        pending = {};
+    }
+
+    window.foliocvAddBlock = function (type) {
+        document.getElementById('block-palette').classList.add('hidden');
+        fetch('/dashboard/blocks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ type: type }).toString()
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            grid.addWidget({
+                x: data.grid_x, y: data.grid_y, w: data.grid_w, h: data.grid_h,
+                id: data.id, content: data.html
+            });
+            if (window.htmx) { htmx.process(document.getElementById('canvas-grid')); }
+        });
+    };
+
+    window.foliocvDeleteBlock = function (id) {
+        if (!confirm('Delete this block?')) return;
+        fetch('/dashboard/blocks/' + id, { method: 'DELETE' }).then(function (res) {
+            if (!res.ok) return;
+            var el = document.querySelector('.grid-stack-item[gs-id="' + id + '"]');
+            if (el) grid.removeWidget(el);
+        });
+    };
+
+    window.foliocvPickBlockImage = function (blockId) {
+        FolioCVCropper.open({
+            aspectRatio: NaN,
+            kind: 'block',
+            onSuccess: function (data) {
+                var urlInput = document.getElementById('block-image-url-' + blockId);
+                if (urlInput) urlInput.value = data.url;
+                var preview = document.getElementById('image-preview-' + blockId);
+                if (preview) {
+                    preview.classList.remove('h-20', 'flex', 'items-center', 'justify-center', 'text-xs', 'text-gray-500');
+                    preview.innerHTML = '<img src="' + data.url + '" class="w-full h-32 object-cover">';
+                }
+            }
+        });
+    };
+})();
+</script>
+{{end}}
