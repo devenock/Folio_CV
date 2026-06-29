@@ -1,0 +1,77 @@
+{{define "portfolio_page"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Portfolio.FullName}} — {{deref .Portfolio.Headline}}</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-black" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div class="max-w-2xl mx-auto px-6 py-16 animate-fade-up">
+        <header class="mb-10">
+            {{if .Portfolio.AvatarURL}}
+            <img src="{{deref .Portfolio.AvatarURL}}" alt="{{.Portfolio.FullName}}" class="w-16 h-16 rounded-full object-cover mb-3">
+            {{end}}
+            <h1 class="font-display text-2xl font-bold">{{.Portfolio.FullName}}</h1>
+            {{if .Portfolio.Headline}}<p class="text-gray-600 mt-1">{{deref .Portfolio.Headline}}</p>{{end}}
+
+            <div class="flex flex-wrap gap-3 mt-3 text-sm text-gray-500">
+                {{if .Portfolio.Email}}<span>{{deref .Portfolio.Email}}</span>{{end}}
+                {{if .Portfolio.Phone}}<span>{{deref .Portfolio.Phone}}</span>{{end}}
+                {{if .Portfolio.Location}}<span>{{deref .Portfolio.Location}}</span>{{end}}
+                {{if .Portfolio.LinkedInURL}}<a href="{{deref .Portfolio.LinkedInURL}}" class="text-blue-600 hover:underline transition-colors">LinkedIn</a>{{end}}
+                {{if .Portfolio.GithubURL}}<a href="{{deref .Portfolio.GithubURL}}" class="text-blue-600 hover:underline transition-colors">GitHub</a>{{end}}
+                {{if .Portfolio.WebsiteURL}}<a href="{{deref .Portfolio.WebsiteURL}}" class="text-blue-600 hover:underline transition-colors">Website</a>{{end}}
+            </div>
+
+            {{if .Portfolio.Summary}}<p class="text-sm text-gray-700 mt-4 leading-relaxed">{{deref .Portfolio.Summary}}</p>{{end}}
+        </header>
+
+        <div class="space-y-8">
+            {{range .Sections}}
+            <section class="border-t border-gray-200 pt-6 animate-fade-up">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">{{.Section.Title}}</h2>
+
+                {{if eq .Section.Type "skills"}}
+                    <div class="space-y-2">
+                        {{range .Items}}
+                        <div class="text-sm">
+                            <span class="font-medium">{{.Title}}:</span>
+                            {{range $i, $tag := .Tags}}{{if $i}}, {{end}}{{$tag}}{{end}}
+                        </div>
+                        {{end}}
+                    </div>
+                {{else if eq .Section.Type "interests"}}
+                    <p class="text-sm">{{range $i, $item := .Items}}{{if $i}}, {{end}}{{$item.Title}}{{end}}</p>
+                {{else if eq .Section.Type "languages"}}
+                    <div class="space-y-1">{{range .Items}}<div class="text-sm">{{.Title}} — {{.Subtitle}}</div>{{end}}</div>
+                {{else}}
+                    <div class="space-y-5">
+                        {{range .Items}}
+                        <div>
+                            <div class="flex justify-between items-baseline">
+                                <span class="font-medium">{{.Title}}</span>
+                                {{if .StartDate}}<span class="text-xs text-gray-400">{{.StartDate}}{{if .EndDate}} – {{.EndDate}}{{end}}</span>{{end}}
+                            </div>
+                            {{if .Subtitle}}<div class="text-sm text-gray-600">{{.Subtitle}}{{if .Location}}, {{.Location}}{{end}}</div>{{end}}
+                            {{if .Description}}<p class="text-sm text-gray-700 mt-1">{{.Description}}</p>{{end}}
+                            {{if .Bullets}}
+                            <ul class="list-disc list-inside text-sm text-gray-700 mt-1 space-y-0.5">
+                                {{range .Bullets}}<li>{{.}}</li>{{end}}
+                            </ul>
+                            {{end}}
+                            {{if .Tags}}<p class="text-xs text-gray-500 mt-1">{{range $i, $tag := .Tags}}{{if $i}}, {{end}}{{$tag}}{{end}}</p>{{end}}
+                            {{if .URL}}<a href="{{.URL}}" class="text-sm text-blue-600 hover:underline transition-colors">{{.URL}}</a>{{end}}
+                        </div>
+                        {{end}}
+                    </div>
+                {{end}}
+            </section>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>
+{{end}}
