@@ -1,0 +1,194 @@
+/* FolioCV shared design system — fonts, motion, glass surfaces.
+   Loaded by every page (app shell + standalone landing/auth/public pages)
+   so the visual language stays identical even though some pages are
+   separate <html> documents outside the htmx-boosted app shell. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --brand: #7c5cff;
+  --brand2: #22d3ee;
+  --brand3: #f472b6;
+}
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  scroll-behavior: smooth;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+/* Ambient gradient mesh — fixed, blurred, slowly drifting blobs behind content */
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mesh-bg::before,
+.mesh-bg::after {
+  content: '';
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.35;
+  animation: meshDrift 22s ease-in-out infinite alternate;
+}
+.mesh-bg::before {
+  top: -20vmax;
+  left: -10vmax;
+  background: radial-gradient(circle, var(--brand), transparent 70%);
+}
+.mesh-bg::after {
+  bottom: -25vmax;
+  right: -15vmax;
+  background: radial-gradient(circle, var(--brand2), transparent 70%);
+  animation-delay: -8s;
+}
+@keyframes meshDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(6vmax, 4vmax) scale(1.1); }
+  100% { transform: translate(-4vmax, -6vmax) scale(0.95); }
+}
+
+/* Gradient text */
+.text-gradient {
+  background-image: linear-gradient(90deg, var(--brand), var(--brand2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass surfaces */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glass-hover {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-hover:hover {
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 8px 30px -10px rgba(124, 92, 255, 0.35);
+}
+
+/* Buttons */
+.btn-primary {
+  background-image: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: white;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 4px 20px -4px rgba(124, 92, 255, 0.5);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px -4px rgba(124, 92, 255, 0.65);
+  filter: brightness(1.05);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Inputs */
+.input-modern {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.input-modern:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Motion utilities */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.08); }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade { animation: fadeIn 0.5s ease both; }
+.animate-float { animation: floatY 4s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spinSlow 6s linear infinite; }
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.12s; }
+.stagger-3 { animation-delay: 0.2s; }
+.stagger-4 { animation-delay: 0.28s; }
+.stagger-5 { animation-delay: 0.36s; }
+
+/* Scroll-triggered reveal — toggled by IntersectionObserver (landing.html) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
+
+/* Smooth cross-page transitions via htmx boost + View Transitions API */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: fadeOutVT 0.18s ease both; }
+::view-transition-new(root) { animation: fadeInVT 0.22s ease both; }
+@keyframes fadeOutVT { to { opacity: 0; } }
+@keyframes fadeInVT { from { opacity: 0; } }
+
+/* Skill / tag pill shared look */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.65rem;
+}
