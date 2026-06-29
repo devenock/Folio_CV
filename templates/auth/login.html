@@ -1,0 +1,24 @@
+{{define "title"}}Sign In — FolioCV{{end}}
+{{define "content"}}
+<div class="max-w-md mx-auto glass rounded-2xl p-8 animate-fade-up">
+    <h1 class="font-display text-2xl font-bold mb-1">Welcome back</h1>
+    <p class="text-sm text-gray-400 mb-6">Sign in to keep building your portfolio.</p>
+    {{if .Error}}
+        <div class="bg-danger/10 border border-danger/40 text-danger rounded-lg px-4 py-2.5 mb-4 text-sm animate-fade">{{.Error}}</div>
+    {{end}}
+    <form method="POST" action="/login" class="space-y-4">
+        <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Email</label>
+            <input type="email" name="email" required value="{{.Email}}"
+                   class="w-full input-modern rounded-lg px-3.5 py-2.5 text-gray-100">
+        </div>
+        <div>
+            <label class="block text-sm text-gray-400 mb-1.5">Password</label>
+            <input type="password" name="password" required
+                   class="w-full input-modern rounded-lg px-3.5 py-2.5 text-gray-100">
+        </div>
+        <button type="submit" class="w-full btn-primary rounded-lg px-4 py-2.5 mt-2">Sign In</button>
+    </form>
+    <p class="mt-6 text-sm text-gray-400">Don't have an account? <a href="/register" class="text-brand2 hover:underline">Register</a></p>
+</div>
+{{end}}
